@@ -32,9 +32,22 @@ public class QuestionsGame {
 	}
 
 	public QuestionsGame(Scanner input) {
-
+		String current = input.next();
+		QuestionNode rootNode = new QuestionNode(current);
+		while (current != null) {
+			
+		}
 	}
 
+	private Enum<?> writeTree(String data, Boolean isQuestion) {
+		
+		
+		
+
+	Enum<?> randomBullShit = null;
+	return randomBullShit;	
+	}
+	
 	public void saveQuestions(PrintStream output) {
 
 	}
