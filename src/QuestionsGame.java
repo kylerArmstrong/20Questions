@@ -16,12 +16,12 @@ public class QuestionsGame {
     	public QuestionNode left;
     	public QuestionNode right;
     	
-    	public QuestionNode(Object d)
+    	public QuestionNode(String d)
     	{
     		this(d, null, null);
     	}
     	
-    	public QuestionNode(Object d, QuestionNode l, QuestionNode r )
+    	public QuestionNode(String d, QuestionNode l, QuestionNode r )
     	{
     		data = d;
     		left = l;
@@ -30,7 +30,7 @@ public class QuestionsGame {
     }
     
     public QuestionsGame(String object) {
-    	
+    	overallNode = new QuestionNode(object);
     }
     
     public QuestionsGame(Scanner input) {
