@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
@@ -31,20 +32,26 @@ public class QuestionsGame {
 		overallNode = new QuestionNode(object);
 	}
 
-	public QuestionsGame(Scanner input) {
+	public QuestionsGame(Scanner input) throws IOException {
 		String current = input.next();
+		current = input.next();
 		QuestionNode rootNode = new QuestionNode(current);
+		current = input.next();
 		while (current != null) {
+			if (current.equals("Q:")){
+				writeTree(input.next(), true);
+			} else if (current.equals("A:")) {
+				writeTree(input.next(), false);
+			} else {
+				throw new IOException("File formatting error");
+			}
 			
+				
 		}
 	}
 
 	private void writeTree(String data, Boolean isQuestion) {
 		
-		
-		
-
-
 	}
 	
 	public void saveQuestions(PrintStream output) {
