@@ -21,7 +21,7 @@ public class QuestionsGame {
     	
     }
     
-    public void saveQeustions(PrintStream output) {
+    public void saveQuestions(PrintStream output) {
     	
     }
     
