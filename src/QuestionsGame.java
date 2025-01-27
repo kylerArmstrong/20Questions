@@ -43,38 +43,5 @@ public class QuestionsGame {
 
 	}
 	
-    private static class QuestionNode {
-        // Your code here
-    	public Object data;
-    	public QuestionNode left;
-    	public QuestionNode right;
-    	
-    	public QuestionNode(String d)
-    	{
-    		this(d, null, null);
-    	}
-    	
-    	public QuestionNode(String d, QuestionNode l, QuestionNode r )
-    	{
-    		data = d;
-    		left = l;
-    		right = r;
-    	}
-    }
-    
-    public QuestionsGame(String object) {
-    	overallNode = new QuestionNode(object);
-    }
-    
-    public QuestionsGame(Scanner input) {
-    	
-    }
-    
-    public void saveQuestions(PrintStream output) {
-    	
-    }
-    
-    public void play() {
-    	
-    }
+   
 }
