@@ -39,13 +39,12 @@ public class QuestionsGame {
 		}
 	}
 
-	private Enum<?> writeTree(String data, Boolean isQuestion) {
+	private void writeTree(String data, Boolean isQuestion) {
 		
 		
 		
 
-	Enum<?> randomBullShit = null;
-	return randomBullShit;	
+
 	}
 	
 	public void saveQuestions(PrintStream output) {
