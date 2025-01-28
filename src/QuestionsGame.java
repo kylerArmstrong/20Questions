@@ -92,7 +92,10 @@ public class QuestionsGame {
 	}
 	
 	public void saveQuestions(PrintStream output) {
-
+		if(output == null)
+		{
+			throw new IllegalArgumentException("Invalid Printstream");
+		}
 	}
 
 	public void play() {
