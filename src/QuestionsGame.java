@@ -96,6 +96,7 @@ public class QuestionsGame {
 		{
 			throw new IllegalArgumentException("Invalid Printstream");
 		}
+		
 	}
 
 	public void play() {
