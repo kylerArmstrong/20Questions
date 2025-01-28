@@ -9,33 +9,39 @@ import java.util.Scanner;
 
 public class QuestionsGame {
 	// Your code here
-	public QuestionNode overallNode;
+	public QuestionNode overallRoot;
 
 	private static class QuestionNode {
 		// Your code here
 		public Object data;
+		public Boolean isQuestion;
 		public QuestionNode left;
 		public QuestionNode right;
 
 		public QuestionNode(String d) {
-			this(d, null, null);
+			this(d, null, null, true);
 		}
-
-		public QuestionNode(String d, QuestionNode l, QuestionNode r) {
+		
+		public QuestionNode(String d, Boolean q) {
+			this(d, null, null, q);
+		}
+		
+		public QuestionNode(String d, QuestionNode l, QuestionNode r, Boolean q) {
 			data = d;
 			left = l;
 			right = r;
+			isQuestion = q;
 		}
 	}
 
 	public QuestionsGame(String object) {
-		overallNode = new QuestionNode(object);
+		overallRoot = new QuestionNode(object);
 	}
 
 	public QuestionsGame(Scanner input) throws IOException {
 		String current = input.next();
 		current = input.next();
-		QuestionNode rootNode = new QuestionNode(current);
+		overallRoot = new QuestionNode(current);
 		current = input.next();
 		while (current != null) {
 			if (current.equals("Q:")){
@@ -51,6 +57,37 @@ public class QuestionsGame {
 	}
 
 	private void writeTree(String data, Boolean isQuestion) {
+		writeRecur(data, isQuestion, overallRoot);
+	}
+	
+	private void writeRecur(String data, Boolean isQuestion, QuestionNode current) {
+		if (current.isQuestion && current.left == null) {
+			current.left = new QuestionNode(data, isQuestion);
+		} else if (current.isQuestion && current.right == null) {
+			current.right = new QuestionNode(data, isQuestion);
+		} else if(current.isQuestion) {
+			if(!current.left.isQuestion) {
+				 writeRecur(data, isQuestion, current.left);
+			}
+			if(!current.right.isQuestion && !containsRecur(overallRoot, data)) {
+				 writeRecur(data, isQuestion, current.right);
+			}
+		}
+	}
+	
+	private boolean containsRecur(QuestionNode current, String str) {
+		if ( current.data.equals(str)) {
+			return true;
+		} else if(current.left != null && current.left != null) {
+			return false;
+		} else {
+			Boolean ret = false;
+			ret = containsRecur(current.left, str);
+			if (!ret) {
+				ret = containsRecur(current.right, str);
+			}
+			return ret;
+		}
 		
 	}
 	
