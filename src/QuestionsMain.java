@@ -37,7 +37,7 @@ public class QuestionsMain {
         } while (console.nextLine().trim().toLowerCase().startsWith("y"));
     }
 
-    public static QuestionsGame createGame(Scanner questions, Scanner console) {
+    public static QuestionsGame createGame(Scanner questions, Scanner console) throws IOException {
         /* Check if the file has anything in it.  If it does, use it.
          * Otherwise, initialize a new game. */
         if (!questions.hasNext()) {

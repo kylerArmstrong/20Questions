@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -115,17 +117,36 @@ public class QuestionsGame {
 		}
 	}
 
-	public void play() {
+	public void play() throws IOException {
 		Scanner keyboard = new Scanner(System.in);
-		String finalAnswer = playRecur(overallRoot, keyboard);
 		
+		QuestionNode finalAnsNode = playRecur(overallRoot, keyboard);
+		String finalAnswer = finalAnsNode.data;
+		System.out.println("Was you object: " + finalAnswer);
+		String playerYN = keyboard.nextLine();//players yes or no response
+		if(playerYN.trim().toLowerCase().startsWith("y"))
+		{
+			System.out.println("Computer wins");
+		} 
+		else
+		{
+			System.out.println("What object were you thinking of?");
+			String playerObj = keyboard.nextLine();//player object
+			System.out.println("How can I distinguish your object from the object before?");
+			String playerQue = keyboard.nextLine();//player question
+			System.out.println("Is your object a yes or no to that question?");
+			String playerQueYN = keyboard.nextLine();//player question yes or no
+			
+			newQuestion(finalAnsNode, playerObj, playerQue, playerQueYN);
+			saveQuestions(new PrintStream(new File("spec-questions.txt")));
+		}
 	}
 	
-	public String playRecur(QuestionNode root, Scanner keyboard)
+	public QuestionNode playRecur(QuestionNode root, Scanner keyboard)
 	{
 		if(!root.isQuestion)
 		{
-			return root.data;
+			return root;
 		}
 		else
 		{
@@ -146,5 +167,20 @@ public class QuestionsGame {
 		}
 	}
 	
+	private void newQuestion(QuestionNode finalAnsNode, String playerObj, String playerQue, String playerQueYN)
+	{
+		String oldAns = finalAnsNode.data;
+		finalAnsNode = new QuestionNode(playerQue, true);
+		if(playerQueYN.trim().toLowerCase().startsWith("y"))
+		{
+			finalAnsNode.left = new QuestionNode(playerObj, false);
+			finalAnsNode.right = new QuestionNode(oldAns, false);
+		}
+		else
+		{
+			finalAnsNode.right = new QuestionNode(playerObj, false);
+			finalAnsNode.left = new QuestionNode(oldAns, false);
+		}
+	}
    
 }
