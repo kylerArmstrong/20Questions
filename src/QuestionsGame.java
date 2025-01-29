@@ -13,7 +13,7 @@ public class QuestionsGame {
 
 	private static class QuestionNode {
 		// Your code here
-		public Object data;
+		public String data;
 		public Boolean isQuestion;
 		public QuestionNode left;
 		public QuestionNode right;
@@ -100,7 +100,34 @@ public class QuestionsGame {
 	}
 
 	public void play() {
-
+		Scanner keyboard = new Scanner(System.in);
+		String finalAnswer = playRecur(overallRoot, keyboard);
+		
+	}
+	
+	public String playRecur(QuestionNode root, Scanner keyboard)
+	{
+		if(!root.isQuestion)
+		{
+			return root.data;
+		}
+		else
+		{
+			System.out.println(root.data);
+			String response = keyboard.next();
+			if(response.trim().toLowerCase().startsWith("y"))
+			{
+				System.out.println();
+				return playRecur(root.left, keyboard);
+			}
+			else
+			{
+				System.out.println();
+				return playRecur(root.right, keyboard);
+			}
+			
+			
+		}
 	}
 	
    
