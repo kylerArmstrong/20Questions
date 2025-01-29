@@ -96,6 +96,19 @@ public class QuestionsGame {
 		{
 			throw new IllegalArgumentException("Invalid Printstream");
 		}
+<<<<<<< Updated upstream
+=======
+		saveRecur(overallRoot, output);
+	}
+	
+	private void saveRecur(QuestionNode current, PrintStream output) {
+		if (current.isQuestion) {
+			output.append("Q:");
+		} else {
+			output.append("A:");
+		}
+		output.append(current.data);
+>>>>>>> Stashed changes
 		
 	}
 
