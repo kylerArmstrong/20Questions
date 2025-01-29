@@ -106,7 +106,13 @@ public class QuestionsGame {
 			output.append("A:");
 		}
 		output.append(current.data);
-		
+		if(current.left != null)
+		{
+			saveRecur(current.left, output);
+		}
+		if (current.right != null) {
+			saveRecur(current.right, output);
+		}
 	}
 
 	public void play() {
