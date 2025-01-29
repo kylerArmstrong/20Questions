@@ -96,8 +96,6 @@ public class QuestionsGame {
 		{
 			throw new IllegalArgumentException("Invalid Printstream");
 		}
-<<<<<<< Updated upstream
-=======
 		saveRecur(overallRoot, output);
 	}
 	
@@ -108,7 +106,6 @@ public class QuestionsGame {
 			output.append("A:");
 		}
 		output.append(current.data);
->>>>>>> Stashed changes
 		
 	}
 
