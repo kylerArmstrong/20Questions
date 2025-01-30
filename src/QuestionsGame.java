@@ -40,20 +40,30 @@ public class QuestionsGame {
 		overallRoot = new QuestionNode(object);
 	}
 
-	public QuestionsGame(Scanner input) throws IOException {
-		String current = input.next();
-		current = input.next();
+	public QuestionsGame(Scanner input) throws IOException { //spec-questions.txt
+		String current = input.nextLine();
+		current = input.nextLine();
 		overallRoot = new QuestionNode(current);
-		current = input.next();
+		System.out.println(current);
+		current = input.nextLine();
 		while (current != null) {
+			System.out.println(current);
 			if (current.equals("Q:")){
-				writeTree(input.next(), true);
+				String next = input.nextLine();
+				System.out.println("ISQ "+ next);
+				writeTree(next, true);
 			} else if (current.equals("A:")) {
-				writeTree(input.next(), false);
+				String next = input.nextLine();
+				System.out.println("ISA "+ next);
+				writeTree(next, false);
 			} else {
 				throw new IOException("File formatting error");
 			}
-			
+			try {
+				current = input.nextLine();
+			} catch(Exception e) {
+				current = null;
+			}
 				
 		}
 	}
