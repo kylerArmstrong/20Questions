@@ -23,11 +23,11 @@ public class QuestionsGame {
 		public QuestionNode(String d) {
 			this(d, null, null, true);
 		}
-		
+
 		public QuestionNode(String d, Boolean q) {
 			this(d, null, null, q);
 		}
-		
+
 		public QuestionNode(String d, QuestionNode l, QuestionNode r, Boolean q) {
 			data = d;
 			left = l;
@@ -40,7 +40,7 @@ public class QuestionsGame {
 		overallRoot = new QuestionNode(object);
 	}
 
-	public QuestionsGame(Scanner input) throws IOException { //spec-questions.txt
+	public QuestionsGame(Scanner input) throws IOException { // spec-questions.txt
 		String current = input.nextLine();
 		current = input.nextLine();
 		overallRoot = new QuestionNode(current);
@@ -48,69 +48,84 @@ public class QuestionsGame {
 		current = input.nextLine();
 		while (current != null) {
 			System.out.println(current);
-			if (current.equals("Q:")){
+			if (current.equals("Q:")) {
 				String next = input.nextLine();
-				System.out.println("ISQ "+ next);
+				System.out.println("ISQ " + next);
 				writeTree(next, true);
 			} else if (current.equals("A:")) {
 				String next = input.nextLine();
-				System.out.println("ISA "+ next);
+				System.out.println("ISA " + next);
 				writeTree(next, false);
 			} else {
 				throw new IOException("File formatting error");
 			}
 			try {
 				current = input.nextLine();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				current = null;
 			}
-				
+
 		}
 	}
 
 	private void writeTree(String data, Boolean isQuestion) {
 		writeRecur(data, isQuestion, overallRoot);
 	}
-	
+
 	private void writeRecur(String data, Boolean isQuestion, QuestionNode current) {
-		if (current.isQuestion && current.left == null) {
-			current.left = new QuestionNode(data, isQuestion);
-		} else if (current.isQuestion && current.right == null) {
-			current.right = new QuestionNode(data, isQuestion);
-		} else if(current.isQuestion) {
-			if(!current.left.isQuestion) {
-				 writeRecur(data, isQuestion, current.left);
+		if (current.isQuestion && (current.left != null || current.right != null)) {
+			if (current.left != null) {
+				if (current.left.isQuestion) {
+					writeRecur(data, isQuestion, current.left);
+				}
 			}
-			if(!current.right.isQuestion && !containsRecur(overallRoot, data)) {
-				 writeRecur(data, isQuestion, current.right);
+			if (current.right != null ) {
+				if (current.right.isQuestion) {
+					writeRecur(data, isQuestion, current.right);
+				}
+			}
+
+		}
+		boolean contains = containsRecur(overallRoot, data);
+		if (!contains) {
+			if (current.isQuestion && current.left == null) {
+				System.out.println("LEFT================== "+data);
+				current.left = new QuestionNode(data, isQuestion);
+			} else if (current.isQuestion && current.right == null) {
+				System.out.println("RIGHT================== "+data);
+				current.right = new QuestionNode(data, isQuestion);
+			} else {
+				// System.out.println("error");
 			}
 		}
 	}
-	
+
 	private boolean containsRecur(QuestionNode current, String str) {
-		if ( current.data.equals(str)) {
+		if (current.data.equals(str)) {
 			return true;
-		} else if(current.left != null && current.left != null) {
+		} else if (current.left != null && current.left != null) {
 			return false;
 		} else {
 			Boolean ret = false;
-			ret = containsRecur(current.left, str);
-			if (!ret) {
+			if (current.left != null) {
+				ret = containsRecur(current.left, str);
+
+			}
+			if (!ret && current.right != null) {
 				ret = containsRecur(current.right, str);
 			}
 			return ret;
 		}
-		
+
 	}
-	
+
 	public void saveQuestions(PrintStream output) {
-		if(output == null)
-		{
+		if (output == null) {
 			throw new IllegalArgumentException("Invalid Printstream");
 		}
 		saveRecur(overallRoot, output);
 	}
-	
+
 	private void saveRecur(QuestionNode current, PrintStream output) {
 		if (current.isQuestion) {
 			output.append("Q:");
@@ -118,8 +133,7 @@ public class QuestionsGame {
 			output.append("A:");
 		}
 		output.append(current.data);
-		if(current.left != null)
-		{
+		if (current.left != null) {
 			saveRecur(current.left, output);
 		}
 		if (current.right != null) {
@@ -129,68 +143,53 @@ public class QuestionsGame {
 
 	public void play() throws IOException {
 		Scanner keyboard = new Scanner(System.in);
-		
+
 		QuestionNode finalAnsNode = playRecur(overallRoot, keyboard);
 		String finalAnswer = finalAnsNode.data;
 		System.out.println("Was you object: " + finalAnswer);
-		String playerYN = keyboard.nextLine();//players yes or no response
-		if(playerYN.trim().toLowerCase().startsWith("y"))
-		{
+		String playerYN = keyboard.nextLine();// players yes or no response
+		if (playerYN.trim().toLowerCase().startsWith("y")) {
 			System.out.println("Computer wins");
-		} 
-		else
-		{
+		} else {
 			System.out.println("What object were you thinking of?");
-			String playerObj = keyboard.nextLine();//player object
+			String playerObj = keyboard.nextLine();// player object
 			System.out.println("How can I distinguish your object from the object before?");
-			String playerQue = keyboard.nextLine();//player question
+			String playerQue = keyboard.nextLine();// player question
 			System.out.println("Is your object a yes or no to that question?");
-			String playerQueYN = keyboard.nextLine();//player question yes or no
-			
+			String playerQueYN = keyboard.nextLine();// player question yes or no
+
 			newQuestion(finalAnsNode, playerObj, playerQue, playerQueYN);
 			saveQuestions(new PrintStream(new File("spec-questions.txt")));
 		}
 	}
-	
-	public QuestionNode playRecur(QuestionNode root, Scanner keyboard)
-	{
-		if(!root.isQuestion)
-		{
+
+	public QuestionNode playRecur(QuestionNode root, Scanner keyboard) {
+		if (!root.isQuestion) {
 			return root;
-		}
-		else
-		{
+		} else {
 			System.out.println(root.data);
 			String response = keyboard.next();
-			if(response.trim().toLowerCase().startsWith("y"))
-			{
+			if (response.trim().toLowerCase().startsWith("y")) {
 				System.out.println();
 				return playRecur(root.left, keyboard);
-			}
-			else
-			{
+			} else {
 				System.out.println();
 				return playRecur(root.right, keyboard);
 			}
-			
-			
+
 		}
 	}
-	
-	private void newQuestion(QuestionNode finalAnsNode, String playerObj, String playerQue, String playerQueYN)
-	{
+
+	private void newQuestion(QuestionNode finalAnsNode, String playerObj, String playerQue, String playerQueYN) {
 		String oldAns = finalAnsNode.data;
 		finalAnsNode = new QuestionNode(playerQue, true);
-		if(playerQueYN.trim().toLowerCase().startsWith("y"))
-		{
+		if (playerQueYN.trim().toLowerCase().startsWith("y")) {
 			finalAnsNode.left = new QuestionNode(playerObj, false);
 			finalAnsNode.right = new QuestionNode(oldAns, false);
-		}
-		else
-		{
+		} else {
 			finalAnsNode.right = new QuestionNode(playerObj, false);
 			finalAnsNode.left = new QuestionNode(oldAns, false);
 		}
 	}
-   
+
 }
