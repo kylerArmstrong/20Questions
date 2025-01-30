@@ -13,7 +13,7 @@ public class QuestionsGame {
 	// Your code here
 	public QuestionNode overallRoot;
 
-	private static class QuestionNode {
+	static class QuestionNode {
 		// Your code here
 		public String data;
 		public Boolean isQuestion;
