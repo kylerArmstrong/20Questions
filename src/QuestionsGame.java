@@ -69,28 +69,34 @@ public class QuestionsGame {
 	}
 
 	private void writeTree(String data, Boolean isQuestion) {
-	    overallRoot = writeRecur(data, isQuestion, overallRoot);
-	}
-	
-	private QuestionNode writeRecur(String data, Boolean isQuestion, QuestionNode current) {
-	    if (current == null) {
-	        return new QuestionNode(data, isQuestion);
-	    }
-	
-	    if (current.isQuestion) {
-	        if (current.left == null) {
-	            current.left = writeRecur(data, isQuestion, current.left);
-	        } else if (current.right == null) {
-	            current.right = writeRecur(data, isQuestion, current.right);
-	        } else {
-	            // If both children exist, recurse on the left subtree
-	            current.left = writeRecur(data, isQuestion, current.left);
-	        }
-	    }
-	
-	    return current;
+		if (overallRoot == null) {
+			overallRoot = new QuestionNode(data, isQuestion);
+		} else {
+			writeRecur(data, isQuestion, overallRoot);
+		}
 	}
 
+	private boolean writeRecur(String data, Boolean isQuestion, QuestionNode current) {
+		if (!current.isQuestion) {
+			return false; // Can't add to an answer node
+		}
+
+		if (current.left == null) {
+			current.left = new QuestionNode(data, isQuestion);
+			return true;
+		}
+
+		if (writeRecur(data, isQuestion, current.left)) {
+			return true;
+		}
+
+		if (current.right == null) {
+			current.right = new QuestionNode(data, isQuestion);
+			return true;
+		}
+
+		return writeRecur(data, isQuestion, current.right);
+	}
 
 	private boolean containsRecur(QuestionNode current, String str) {
 		if (current.data.equals(str)) {
