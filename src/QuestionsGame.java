@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 // This is a starter file for QuestionsGame.
 //
-// You should delete this comment and replace it with your class
-// header comment.
+// Bejnamin Houhseolder & Kyler Armstrong
+// Methods to play a game of 20 quesions
 
 public class QuestionsGame {
 	// Your code here
@@ -44,17 +44,17 @@ public class QuestionsGame {
 		String current = input.nextLine();
 		current = input.nextLine();
 		overallRoot = new QuestionNode(current);
-		System.out.println(current);
+		//System.out.println(current);
 		current = input.nextLine();
 		while (current != null) {
-			System.out.println(current);
+			//System.out.println(current);
 			if (current.equals("Q:")) {
 				String next = input.nextLine();
-				System.out.println("ISQ " + next);
+				//ystem.out.println("ISQ " + next);
 				writeTree(next, true);
 			} else if (current.equals("A:")) {
 				String next = input.nextLine();
-				System.out.println("ISA " + next);
+				//System.out.println("ISA " + next);
 				writeTree(next, false);
 			} else {
 				throw new IOException("File formatting error");
@@ -78,63 +78,54 @@ public class QuestionsGame {
 
 	private boolean writeRecur(String data, Boolean isQuestion, QuestionNode current) {
 		if (!current.isQuestion) {
-			return false; // Can't add to an answer node
+			return false; // Can't add to an answer node. This should never happen though
 		}
 
 		if (current.left == null) {
+			// if left is empty; always add new node
 			current.left = new QuestionNode(data, isQuestion);
 			return true;
 		}
 
+		//check if left was written to and if so, don't write to right
 		if (writeRecur(data, isQuestion, current.left)) {
 			return true;
 		}
 
+		//if left was not written to, write to right
 		if (current.right == null) {
 			current.right = new QuestionNode(data, isQuestion);
 			return true;
 		}
 
+		//keep going
 		return writeRecur(data, isQuestion, current.right);
-	}
-
-	private boolean containsRecur(QuestionNode current, String str) {
-		if (current.data.equals(str)) {
-			return true;
-		} else if (current.left != null && current.left != null) {
-			return false;
-		} else {
-			Boolean ret = false;
-			if (current.left != null) {
-				ret = containsRecur(current.left, str);
-
-			}
-			if (!ret && current.right != null) {
-				ret = containsRecur(current.right, str);
-			}
-			return ret;
-		}
-
 	}
 
 	public void saveQuestions(PrintStream output) {
 		if (output == null) {
+			// throw if broken printstream
 			throw new IllegalArgumentException("Invalid Printstream");
 		}
 		saveRecur(overallRoot, output);
 	}
 
 	private void saveRecur(QuestionNode current, PrintStream output) {
+		//print to given printstream
 		if (current.isQuestion) {
-			output.append("Q:");
+			//append Q and A headers
+			output.append("Q:\n");
 		} else {
-			output.append("A:");
+			output.append("A:\n");
 		}
-		output.append(current.data);
+		//append current data
+		output.append(current.data+"\n");
 		if (current.left != null) {
+			// if left exists keep going
 			saveRecur(current.left, output);
 		}
 		if (current.right != null) {
+			//same for right
 			saveRecur(current.right, output);
 		}
 	}
@@ -144,7 +135,8 @@ public class QuestionsGame {
 
 		QuestionNode finalAnsNode = playRecur(overallRoot, keyboard);
 		String finalAnswer = finalAnsNode.data;
-		System.out.println("Was you object: " + finalAnswer);
+		System.out.println("Was your object: " + finalAnswer+" ?");
+		keyboard.nextLine();
 		String playerYN = keyboard.nextLine();// players yes or no response
 		if (playerYN.trim().toLowerCase().startsWith("y")) {
 			System.out.println("Computer wins");
@@ -157,7 +149,15 @@ public class QuestionsGame {
 			String playerQueYN = keyboard.nextLine();// player question yes or no
 
 			newQuestion(finalAnsNode, playerObj, playerQue, playerQueYN);
-			saveQuestions(new PrintStream(new File("spec-questions.txt")));
+			System.out.println("Where would you like to save the new questions? ");
+			String filename = keyboard.nextLine().trim();
+
+			/* Create the Questions File if it doesn't exist */
+			File questionsFile = new File(filename);
+			if (!questionsFile.exists()) {
+				questionsFile.createNewFile();
+			}
+			saveQuestions(new PrintStream(questionsFile));
 		}
 	}
 
@@ -165,6 +165,7 @@ public class QuestionsGame {
 		if (!root.isQuestion) {
 			return root;
 		} else {
+			// ask question and wait for response, returning the last answered question
 			System.out.println(root.data);
 			String response = keyboard.next();
 			if (response.trim().toLowerCase().startsWith("y")) {
@@ -179,9 +180,12 @@ public class QuestionsGame {
 	}
 
 	private void newQuestion(QuestionNode finalAnsNode, String playerObj, String playerQue, String playerQueYN) {
+		//grab old answer and replace with new question
 		String oldAns = finalAnsNode.data;
-		finalAnsNode = new QuestionNode(playerQue, true);
+		finalAnsNode.data = playerQue;
+		finalAnsNode.isQuestion = true;
 		if (playerQueYN.trim().toLowerCase().startsWith("y")) {
+			// if yes, left is new object, right is old object
 			finalAnsNode.left = new QuestionNode(playerObj, false);
 			finalAnsNode.right = new QuestionNode(oldAns, false);
 		} else {
