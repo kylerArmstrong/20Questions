@@ -69,35 +69,52 @@ public class QuestionsGame {
 	}
 
 	private void writeTree(String data, Boolean isQuestion) {
-		writeRecur(data, isQuestion, overallRoot);
+		QuestionNode node = writeRecur(data, isQuestion, overallRoot);
+		if (node.left == null) {
+			node.left = new QuestionNode(data, isQuestion);
+		} else {
+			node.right = new QuestionNode(data, isQuestion);
+		}
 	}
 
-	private void writeRecur(String data, Boolean isQuestion, QuestionNode current) {
-		if (current.isQuestion && (current.left != null || current.right != null)) {
+	private QuestionNode writeRecur(String data, Boolean isQuestion, QuestionNode current) {
+		// needs stop code traversing should work
+		// traverse is just if can go left and it question go left then same with right
+		if (current.left == null) {
+			return current;
+		} else if (current.right == null && leftSideIsDone())
 			if (current.left != null) {
 				if (current.left.isQuestion) {
-					writeRecur(data, isQuestion, current.left);
+					return writeRecur(data, isQuestion, current.left);
 				}
 			}
-			if (current.right != null ) {
-				if (current.right.isQuestion) {
-					writeRecur(data, isQuestion, current.right);
-				}
+		if (current.right != null) {
+			if (current.right.isQuestion) {
+				return writeRecur(data, isQuestion, current.right);
 			}
+		}
 
-		}
-		boolean contains = containsRecur(overallRoot, data);
-		if (!contains) {
-			if (current.isQuestion && current.left == null) {
-				System.out.println("LEFT================== "+data);
-				current.left = new QuestionNode(data, isQuestion);
-			} else if (current.isQuestion && current.right == null) {
-				System.out.println("RIGHT================== "+data);
-				current.right = new QuestionNode(data, isQuestion);
-			} else {
-				// System.out.println("error");
+		return null;
+
+	}
+
+	private boolean leftSideIsDone() {
+		return leftSizeRecur(overallRoot.left);
+	}
+
+	private boolean leftSizeRecur(QuestionNode current) {
+		//check if the left size is complete with answers
+		if (current.left != null) {
+			if (current.left.isQuestion) {
+				return leftSizeRecur(current.left);
 			}
 		}
+		if (current.right != null) {
+			if (current.right.isQuestion) {
+				return leftSizeRecur(current.right);
+			}
+		}
+		return false;
 	}
 
 	private boolean containsRecur(QuestionNode current, String str) {
